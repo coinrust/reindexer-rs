@@ -94,12 +94,28 @@ void reindexer_client_test() {
     //ASSERT_TRUE(err.ok()) << err.what();
     cout << err.ok() << " " << err.what() << endl;
 
+//    DefineNamespaceDataset(default_namespace, {IndexDeclaration{idIdxName.c_str(), "hash", "int", IndexOpts().PK(), 0},
+//                                               IndexDeclaration{updatedTimeSecFieldName.c_str(), "", "int64", IndexOpts(), 0},
+//                                               IndexDeclaration{updatedTimeMSecFieldName.c_str(), "", "int64", IndexOpts(), 0},
+//                                               IndexDeclaration{updatedTimeUSecFieldName.c_str(), "", "int64", IndexOpts(), 0},
+//                                               IndexDeclaration{updatedTimeNSecFieldName.c_str(), "", "int64", IndexOpts(), 0},
+//                                               IndexDeclaration{serialFieldName.c_str(), "", "int64", IndexOpts(), 0}});
+
+//    DefineNamespaceDataset(
+//            default_namespace,
+//            {IndexDeclaration{idIdxName.c_str(), "hash", "int", IndexOpts().PK(), 0}, IndexDeclaration{"date", "", "int64", IndexOpts(), 0},
+//             IndexDeclaration{"price", "", "int64", IndexOpts(), 0}, IndexDeclaration{"serialNumber", "", "int64", IndexOpts(), 0},
+//             IndexDeclaration{"fileName", "", "string", IndexOpts(), 0}});
+
+    // .../src/github.com/restream/reindexer/cpp_src/core/indexdef.cc
+
     err = db->AddIndex(default_namespace, {"id", "hash", "int", IndexOpts().PK()});
     //ASSERT_TRUE(err.ok()) << err.what();
-    cout << err.ok() << " " << err.what() << endl;
+    cout << err.ok() << err.what() << endl;
 
-    //err = db->AddIndex(default_namespace, {"value", "text", "string", IndexOpts()});
+    err = db->AddIndex(default_namespace, {"value", "text", "string", IndexOpts()});
     //ASSERT_TRUE(err.ok()) << err.what();
+    cout << err.ok() << err.what() << endl;
 
     //Item item(db->NewItem(default_namespace));
     auto item = db->NewItem(default_namespace);
