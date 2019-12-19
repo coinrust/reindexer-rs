@@ -10,28 +10,28 @@ pub enum Iterator {} // reindexer::client::QueryResults::Iterator
 
 #[allow(dead_code)]
 extern "C" {
-    pub fn reindexer_test() -> ();
-    pub fn reindexer_client_test() -> ();
+    pub fn re_test() -> ();
+    pub fn re_client_test() -> ();
 
-    pub fn reindexer_client_new() -> *mut Reindexer;
-    pub fn reindexer_client_destroy(db: *mut Reindexer) -> ();
-    pub fn reindexer_client_connect(db: *mut Reindexer, dsn: *const c_char) -> bool;
-    pub fn reindexer_client_open_namespace(db: *mut Reindexer, ns: *const c_char) -> bool;
+    pub fn re_client_new() -> *mut Reindexer;
+    pub fn re_client_destroy(db: *mut Reindexer) -> ();
+    pub fn re_client_connect(db: *mut Reindexer, dsn: *const c_char) -> bool;
+    pub fn re_client_open_namespace(db: *mut Reindexer, ns: *const c_char) -> bool;
     
-    pub fn reindexer_client_insert(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
-    pub fn reindexer_client_update(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
-    pub fn reindexer_client_upsert(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
-    pub fn reindexer_client_delete(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
-    pub fn reindexer_client_select(db: *mut Reindexer, qr: *mut QueryResults, query: *const c_char) -> bool;
+    pub fn re_client_insert(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
+    pub fn re_client_update(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
+    pub fn re_client_upsert(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
+    pub fn re_client_delete(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
+    pub fn re_client_select(db: *mut Reindexer, qr: *mut QueryResults, query: *const c_char) -> bool;
     
-    pub fn query_results_new() -> *mut QueryResults;
-    pub fn query_results_destroy(qr: *mut QueryResults) -> ();
+    pub fn re_client_query_results_new() -> *mut QueryResults;
+    pub fn re_client_query_results_destroy(qr: *mut QueryResults) -> ();
     
-    pub fn query_results_count(qr: *mut QueryResults) -> c_int;
-    pub fn query_results_iter(qr: *mut QueryResults) -> *mut Iterator;
-    pub fn query_results_iterator_next(it: *mut Iterator) -> bool;
-    pub fn query_results_iter_destroy(it: *mut Iterator) -> ();
-    pub fn query_results_iter_get_json(it: *mut Iterator, output: *mut c_char) -> bool;
+    pub fn re_client_query_results_count(qr: *mut QueryResults) -> c_int;
+    pub fn re_client_query_results_iter(qr: *mut QueryResults) -> *mut Iterator;
+    pub fn re_client_query_results_iterator_next(it: *mut Iterator) -> bool;
+    pub fn re_client_query_results_iter_destroy(it: *mut Iterator) -> ();
+    pub fn re_client_query_results_iter_get_json(it: *mut Iterator, output: *mut c_char) -> bool;
 
     //pub fn wr_serializer_new() -> *mut WrSerializer;
     //pub fn wr_serializer_destroy(qr: *mut WrSerializer) -> ();

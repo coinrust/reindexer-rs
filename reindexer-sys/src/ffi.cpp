@@ -34,7 +34,7 @@ public:
 
 extern "C" {
 
-void reindexer_test() {
+void re_test() {
     using std::chrono::milliseconds;
     const string default_namespace = "test_namespace";
 
@@ -80,7 +80,7 @@ void reindexer_test() {
     //ASSERT_TRUE(err.ok()) << err.what();
 }
 
-void reindexer_client_test() {
+void re_client_test() {
     cout << "reindexer_client_test" << endl;
     const string default_namespace = "test_namespace";
     reindexer::client::ReindexerConfig config;
@@ -180,7 +180,7 @@ void reindexer_client_test() {
     //err = db->WithTimeout(milliseconds(1000)).Delete(Query(default_namespace), qr);
 }
 
-reindexer::client::Reindexer *reindexer_client_new() {
+reindexer::client::Reindexer *re_client_new() {
     //cout << "reindexer_client_new" << endl;
     //const string default_namespace = "test_namespace";
     reindexer::client::ReindexerConfig config;
@@ -189,7 +189,7 @@ reindexer::client::Reindexer *reindexer_client_new() {
     return new reindexer::client::Reindexer(config);
 }
 
-void reindexer_client_destroy(reindexer::client::Reindexer *db) {
+void re_client_destroy(reindexer::client::Reindexer *db) {
     if (db != nullptr) {
         delete db;
         db = nullptr;
@@ -197,19 +197,19 @@ void reindexer_client_destroy(reindexer::client::Reindexer *db) {
 }
 
 // cproto://127.0.0.1:6534/test_db
-bool reindexer_client_connect(reindexer::client::Reindexer *db, const char* dsn) {
+bool re_client_connect(reindexer::client::Reindexer *db, const char* dsn) {
     //cout << "reindexer_client_connect: " << dsn << endl;
     auto err = db->Connect(string(dsn));
     return err.ok();
 }
 
-bool reindexer_client_open_namespace(reindexer::client::Reindexer *db, const char* ns) {
+bool re_client_open_namespace(reindexer::client::Reindexer *db, const char* ns) {
     //cout << "reindexer_client_open_namespace: " << ns << endl;
     Error err = db->OpenNamespace(string(ns), StorageOpts().Enabled(false));
     return err.ok();
 }
 
-bool reindexer_client_insert(reindexer::client::Reindexer *db, const char* ns, const char* data) {
+bool re_client_insert(reindexer::client::Reindexer *db, const char* ns, const char* data) {
     reindexer::client::Item item(db->NewItem(ns));
     //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
 
@@ -233,7 +233,7 @@ bool reindexer_client_insert(reindexer::client::Reindexer *db, const char* ns, c
     return err.ok();
 }
 
-bool reindexer_client_update(reindexer::client::Reindexer *db, const char* ns, const char* data) {
+bool re_client_update(reindexer::client::Reindexer *db, const char* ns, const char* data) {
     reindexer::client::Item item(db->NewItem(ns));
     //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
 
@@ -257,7 +257,7 @@ bool reindexer_client_update(reindexer::client::Reindexer *db, const char* ns, c
     return err.ok();
 }
 
-bool reindexer_client_upsert(reindexer::client::Reindexer *db, const char* ns, const char* data) {
+bool re_client_upsert(reindexer::client::Reindexer *db, const char* ns, const char* data) {
     reindexer::client::Item item(db->NewItem(ns));
     //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
 
@@ -281,7 +281,7 @@ bool reindexer_client_upsert(reindexer::client::Reindexer *db, const char* ns, c
     return err.ok();
 }
 
-bool reindexer_client_delete(reindexer::client::Reindexer *db, const char* ns, const char* data) {
+bool re_client_delete(reindexer::client::Reindexer *db, const char* ns, const char* data) {
     reindexer::client::Item item(db->NewItem(ns));
     //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
 
@@ -305,32 +305,32 @@ bool reindexer_client_delete(reindexer::client::Reindexer *db, const char* ns, c
     return err.ok();
 }
 
-bool reindexer_client_select(reindexer::client::Reindexer *db, reindexer::client::QueryResults *qr, const char* query) {
+bool re_client_select(reindexer::client::Reindexer *db, reindexer::client::QueryResults *qr, const char* query) {
     Error err = db->Select(query, *qr);
     //cout << err.ok() << " " << err.what() << endl;
     return err.ok();
 }
 
-reindexer::client::QueryResults *query_results_new() {
+reindexer::client::QueryResults *re_client_query_results_new() {
     return new reindexer::client::QueryResults();
 }
 
-void query_results_destroy(reindexer::client::QueryResults *qr) {
+void re_client_query_results_destroy(reindexer::client::QueryResults *qr) {
     if (qr != nullptr) {
         delete qr;
         qr = nullptr;
     }
 }
 
-int query_results_count(reindexer::client::QueryResults *qr) {
+int re_client_query_results_count(reindexer::client::QueryResults *qr) {
     return qr->Count();
 }
 
-Iterator* query_results_iter(reindexer::client::QueryResults *qr) {
+Iterator* re_client_query_results_iter(reindexer::client::QueryResults *qr) {
     return new Iterator(qr->begin(), qr->end());
 }
 
-bool query_results_iterator_next(Iterator *it) {
+bool re_client_query_results_iterator_next(Iterator *it) {
     if (it->iter) {
         if (it->current == it->end) {
             return false;
@@ -345,7 +345,7 @@ bool query_results_iterator_next(Iterator *it) {
     return it->current.Status().ok();
 }
 
-bool query_results_iter_get_json(Iterator *it, char *output) {
+bool re_client_query_results_iter_get_json(Iterator *it, char *output) {
     WrSerializer ser;
     auto ok = it->current.GetJSON(ser, false);
     //string json(ser.Slice());
@@ -353,7 +353,7 @@ bool query_results_iter_get_json(Iterator *it, char *output) {
     return ok.ok();
 }
 
-void query_results_iter_destroy(Iterator *it) {
+void re_client_query_results_iter_destroy(Iterator *it) {
     if (it != nullptr) {
         delete it;
         it = nullptr;
