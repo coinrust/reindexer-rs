@@ -2,8 +2,12 @@
 Reindexer library for Rust
 
 # Build
-cargo build -p reindexer-sys
-cargo build -p reindexer-examples
+```
+$ cargo build -p reindexer-sys
+$ cargo build -p reindexer-examples
+```
 
 # Run example
-cargo run -p reindexer-examples
+```
+$ cargo run -p reindexer-examples
+```
