@@ -209,6 +209,36 @@ bool re_client_open_namespace(reindexer::client::Reindexer *db, const char* ns) 
     return err.ok();
 }
 
+IndexOpts *index_opts_new() {
+    return new IndexOpts();
+}
+
+void index_opts_destroy(IndexOpts *indexOpts) {
+    if (indexOpts != nullptr) {
+        delete indexOpts;
+        indexOpts = nullptr;
+    }
+}
+
+void index_opts_pk(IndexOpts *indexOpts) {
+    indexOpts->PK();
+}
+
+// IndexDef(const string &name, const string &indexType, const string &fieldType, const IndexOpts opts);
+bool re_client_add_index(reindexer::client::Reindexer *db, const char* ns, const char* name, const char* indexType,
+        const char* fieldType, IndexOpts *indexOpts) {
+//    err = db->AddIndex(default_namespace, {"id", "hash", "int", IndexOpts().PK()});
+//    //ASSERT_TRUE(err.ok()) << err.what();
+//    cout << err.ok() << err.what() << endl;
+//
+//    err = db->AddIndex(default_namespace, {"value", "text", "string", IndexOpts()});
+//    //ASSERT_TRUE(err.ok()) << err.what();
+//    cout << err.ok() << err.what() << endl;
+    //err = db->AddIndex(default_namespace, {"id", "hash", "int", IndexOpts().PK()});
+    auto err = db->AddIndex(ns, {name, indexType, fieldType, *indexOpts});
+    return err.ok();
+}
+
 bool re_client_insert(reindexer::client::Reindexer *db, const char* ns, const char* data) {
     reindexer::client::Item item(db->NewItem(ns));
     //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
@@ -330,7 +360,7 @@ Iterator* re_client_query_results_iter(reindexer::client::QueryResults *qr) {
     return new Iterator(qr->begin(), qr->end());
 }
 
-bool re_client_query_results_iterator_next(Iterator *it) {
+bool re_client_query_results_iter_next(Iterator *it) {
     if (it->iter) {
         if (it->current == it->end) {
             return false;
