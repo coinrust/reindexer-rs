@@ -198,13 +198,11 @@ void re_client_destroy(reindexer::client::Reindexer *db) {
 
 // cproto://127.0.0.1:6534/test_db
 bool re_client_connect(reindexer::client::Reindexer *db, const char* dsn) {
-    //cout << "reindexer_client_connect: " << dsn << endl;
     auto err = db->Connect(string(dsn));
     return err.ok();
 }
 
 bool re_client_open_namespace(reindexer::client::Reindexer *db, const char* ns) {
-    //cout << "reindexer_client_open_namespace: " << ns << endl;
     Error err = db->OpenNamespace(string(ns), StorageOpts().Enabled(false));
     return err.ok();
 }
@@ -365,7 +363,7 @@ bool re_client_query_results_iter_next(Iterator *it) {
         if (it->current == it->end) {
             return false;
         }
-        ++it->current;
+        ++(*it->current);
     } else {
         it->iter = true;
     }
@@ -375,12 +373,12 @@ bool re_client_query_results_iter_next(Iterator *it) {
     return it->current.Status().ok();
 }
 
-bool re_client_query_results_iter_get_json(Iterator *it, char *output) {
+char* re_client_query_results_iter_get_json(Iterator *it) {
     WrSerializer ser;
     auto ok = it->current.GetJSON(ser, false);
     //string json(ser.Slice());
-    strcpy(output, ser.c_str());
-    return ok.ok();
+    auto a = strdup(ser.c_str());
+    return a;
 }
 
 void re_client_query_results_iter_destroy(Iterator *it) {
@@ -389,15 +387,5 @@ void re_client_query_results_iter_destroy(Iterator *it) {
         it = nullptr;
     }
 }
-
-//WrSerializer *wr_serializer_new() {
-//    return new WrSerializer();
-//}
-//
-
-//void wr_serializer_destroy(WrSerializer *ser) {
-//    delete ser;
-//    ser = nullptr;
-//}
 
 }

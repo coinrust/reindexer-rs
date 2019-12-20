@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 reindexer-sys = { path = "../reindexer-sys", version = "0.1.0" }
+reindexer-rs = { path = "..", version = "0.1.0" }

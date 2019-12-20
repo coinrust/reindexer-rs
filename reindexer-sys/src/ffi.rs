@@ -6,8 +6,6 @@ pub enum Reindexer {} // reindexer::client::Reindexer
 pub enum QueryResults {} // reindexer::client::QueryResults
 pub enum Iterator {} // reindexer::client::QueryResults::Iterator
 pub enum IndexOpts {} // IndexOpts
-//pub enum WrSerializer {} // WrSerializer
-//pub enum Error {} // reindexer::Error
 
 #[allow(dead_code)]
 extern "C" {
@@ -39,8 +37,5 @@ extern "C" {
     pub fn re_client_query_results_iter(qr: *mut QueryResults) -> *mut Iterator;
     pub fn re_client_query_results_iter_next(it: *mut Iterator) -> bool;
     pub fn re_client_query_results_iter_destroy(it: *mut Iterator) -> ();
-    pub fn re_client_query_results_iter_get_json(it: *mut Iterator, output: *mut c_char) -> bool;
-
-    //pub fn wr_serializer_new() -> *mut WrSerializer;
-    //pub fn wr_serializer_destroy(qr: *mut WrSerializer) -> ();
+    pub fn re_client_query_results_iter_get_json(it: *mut Iterator) -> *mut c_char;
 }

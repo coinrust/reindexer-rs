@@ -1,5 +1,5 @@
 use reindexer_sys::ffi::{self};
-use std::ffi::CString;
+use std::ffi::CStr;
 
 pub struct Iter {
     pub inner: *mut ffi::Iterator,
@@ -11,15 +11,11 @@ impl Iter {
     }
 
     pub fn get_json(&mut self) -> String {
-        let output = CString::new("").unwrap();
-        let raw = output.into_raw();
-        let ok = unsafe { ffi::re_client_query_results_iter_get_json(self.inner, raw) };
-        if !ok {
-            return String::from("");
+        unsafe {
+            let str_buff = ffi::re_client_query_results_iter_get_json(self.inner);
+            let cstr = CStr::from_ptr(str_buff);
+            cstr.to_string_lossy().into_owned()
         }
-        let output = unsafe { CString::from_raw(raw) };
-        let s = output.to_str().unwrap();
-        s.to_owned()
     }
 }
 

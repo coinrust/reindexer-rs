@@ -1,7 +1,45 @@
 use reindexer_sys::ffi;
+use reindexer_rs::reindexer::*;
 use std::ffi::CString;
+use std::ffi::CStr;
 
 fn main() {
+    let mut db = Reindexer::new();
+    let ok = db.connect("cproto://127.0.0.1:6534/test_db");
+    assert_eq!(true, ok);
+
+    let ns = "items";
+    let ok = db.open_namespace(ns);
+    assert_eq!(true, ok);
+
+    let ok = db.add_index(ns, "id", "hash", "int", true);
+    assert_eq!(true, ok);
+
+    let item = r#"{"id":1234, "value" : "value"}"#;
+    let ok = db.upsert(ns, item);
+    assert_eq!(true, ok);
+
+    let item = r#"{"id":1235, "value" : "value"}"#;
+    let ok = db.upsert(ns, item);
+    assert_eq!(true, ok);
+
+    let (mut qr, ok) = db.select("SELECT * FROM items");
+    assert_eq!(true, ok);
+
+    let mut it = qr.iter();
+    loop {
+        let ok = it.next();
+        if !ok {
+            break;
+        }
+        let json = it.get_json();
+        println!("item: {}", json);
+    }
+
+    println!("OK");
+}
+
+fn test_unsafe() {
     unsafe {
         let db = ffi::re_client_new();
 
@@ -9,7 +47,7 @@ fn main() {
         let ok = ffi::re_client_connect(db, dsn.as_ptr());
         println!("re_client_connect: {}", ok);
 
-        let ns = CString::new("test_namespace").unwrap();
+        let ns = CString::new("items").unwrap();
         let ok = ffi::re_client_open_namespace(db, ns.as_ptr());
         println!("re_client_open_namespace: {}", ok);
 
@@ -45,12 +83,12 @@ fn main() {
             if !ok {
                 break;
             }
-            let output = CString::new("").unwrap();
-            let raw = output.into_raw();
-            let ok = ffi::re_client_query_results_iter_get_json(it, raw);
+
+            let json = ffi::re_client_query_results_iter_get_json(it);
             println!("re_client_query_results_iter_get_json {}", ok);
-            let output = CString::from_raw(raw);
-            println!("re_client_query_results_iter_get_json: {:?}", output.to_string_lossy());
+            let cstr = CStr::from_ptr(json);
+            let s = cstr.to_string_lossy().into_owned();
+            println!("re_client_query_results_iter_get_json: {:?}", s);
         }
 
         ffi::re_client_query_results_iter_destroy(it);
@@ -65,6 +103,4 @@ fn main() {
         //ffi::re_test();
         //ffi::re_client_test();
     }
-
-    println!("OK");
 }
