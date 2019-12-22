@@ -1,6 +1,6 @@
 use reindexer_sys::ffi::{self};
 use std::ffi::CString;
-use crate::query_results::CQueryResults;
+use crate::cqueryresults::CQueryResults;
 
 pub struct CReindexer {
     inner: *mut ffi::CReindexer,

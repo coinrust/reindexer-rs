@@ -1,3 +1,3 @@
-pub mod iter;
-pub mod query_results;
-pub mod reindexer;
+pub mod citer;
+pub mod cqueryresults;
+pub mod creindexer;

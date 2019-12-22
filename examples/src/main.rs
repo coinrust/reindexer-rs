@@ -1,5 +1,5 @@
 use reindexer_sys::ffi;
-use reindexer_rs::reindexer::*;
+use reindexer_rs::creindexer::*;
 use std::ffi::CString;
 use std::ffi::CStr;
 
