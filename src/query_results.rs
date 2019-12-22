@@ -1,13 +1,13 @@
 use reindexer_sys::ffi::{self};
-use crate::iter::Iter;
+use crate::iter::CIter;
 
-pub struct QueryResults {
-    pub inner: *mut ffi::QueryResults,
+pub struct CQueryResults {
+    pub inner: *mut ffi::CQueryResults,
 }
 
-impl QueryResults {
+impl CQueryResults {
     pub fn new() -> Self {
-        QueryResults {
+        CQueryResults {
             inner: unsafe { ffi::re_client_query_results_new() },
         }
     }
@@ -16,13 +16,13 @@ impl QueryResults {
         unsafe { ffi::re_client_query_results_count(self.inner) }
     }
 
-    pub fn iter(&mut self) -> Iter {
+    pub fn iter(&mut self) -> CIter {
         let inner = unsafe { ffi::re_client_query_results_iter(self.inner) };
-        Iter { inner }
+        CIter { inner }
     }
 }
 
-impl Drop for QueryResults {
+impl Drop for CQueryResults {
     fn drop(&mut self) {
         unsafe {
             ffi::re_client_query_results_destroy(self.inner);

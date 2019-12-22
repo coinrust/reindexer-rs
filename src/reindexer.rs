@@ -1,14 +1,14 @@
 use reindexer_sys::ffi::{self};
 use std::ffi::CString;
-use crate::query_results::QueryResults;
+use crate::query_results::CQueryResults;
 
-pub struct Reindexer {
-    inner: *mut ffi::Reindexer,
+pub struct CReindexer {
+    inner: *mut ffi::CReindexer,
 }
 
-impl Reindexer {
+impl CReindexer {
     pub fn new() -> Self {
-        Reindexer {
+        CReindexer {
             inner: unsafe { ffi::re_client_new() },
         }
     }
@@ -86,15 +86,15 @@ impl Reindexer {
     /*
     query: `"SELECT * FROM items"`
     */
-    pub fn select(&mut self, query: &str) -> (QueryResults, bool) {
+    pub fn select(&mut self, query: &str) -> (CQueryResults, bool) {
         let query = CString::new(query).unwrap();
-        let qr = QueryResults::new();
+        let qr = CQueryResults::new();
         let ok = unsafe { ffi::re_client_select(self.inner, qr.inner, query.as_ptr()) };
         (qr, ok)
     }
 }
 
-impl Drop for Reindexer {
+impl Drop for CReindexer {
     fn drop(&mut self) {
         unsafe {
             ffi::re_client_destroy(self.inner);

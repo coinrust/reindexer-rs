@@ -1,11 +1,11 @@
 use reindexer_sys::ffi::{self};
 use std::ffi::CStr;
 
-pub struct Iter {
-    pub inner: *mut ffi::Iterator,
+pub struct CIter {
+    pub inner: *mut ffi::CQueryResultsIterator,
 }
 
-impl Iter {
+impl CIter {
     pub fn next(&mut self) -> bool {
         unsafe { ffi::re_client_query_results_iter_next(self.inner) }
     }
@@ -19,7 +19,7 @@ impl Iter {
     }
 }
 
-impl Drop for Iter {
+impl Drop for CIter {
     fn drop(&mut self) {
         unsafe {
             ffi::re_client_query_results_iter_destroy(self.inner);

@@ -4,7 +4,7 @@ use std::ffi::CString;
 use std::ffi::CStr;
 
 fn main() {
-    let mut db = Reindexer::new();
+    let mut db = CReindexer::new();
     let ok = db.connect("cproto://127.0.0.1:6534/test_db");
     assert_eq!(true, ok);
 
