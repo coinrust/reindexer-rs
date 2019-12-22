@@ -1,29 +1,22 @@
 use reindexer_sys::ffi::{self};
 use std::ffi::CString;
-use crate::cqueryresults::CQueryResults;
+use crate::queryresults::QueryResults;
 
-pub struct CReindexer {
-    inner: *mut ffi::CReindexer,
+pub struct Reindexer {
+    inner: *mut ffi::Reindexer,
 }
 
-impl CReindexer {
+impl Reindexer {
     pub fn new() -> Self {
-        CReindexer {
-            inner: unsafe { ffi::re_client_new() },
-        }
-    }
-
-    pub fn connect(&mut self, dsn: &str) -> bool {
-        let dsn = CString::new(dsn).unwrap();
-        unsafe {
-            ffi::re_client_connect(self.inner, dsn.as_ptr())
+        Reindexer {
+            inner: unsafe { ffi::re_new() },
         }
     }
 
     pub fn open_namespace(&mut self, ns: &str, storage_enabled: bool) -> bool {
         let ns = CString::new(ns).unwrap();
         unsafe {
-            ffi::re_client_open_namespace(self.inner, ns.as_ptr(), storage_enabled)
+            ffi::re_open_namespace(self.inner, ns.as_ptr(), storage_enabled)
         }
     }
 
@@ -37,7 +30,7 @@ impl CReindexer {
             unsafe { ffi::index_opts_pk(index_opts); }
         }
         let ok = unsafe {
-            ffi::re_client_add_index(self.inner, ns.as_ptr(), name.as_ptr(), index_type.as_ptr(), field_type.as_ptr(), index_opts)
+            ffi::re_add_index(self.inner, ns.as_ptr(), name.as_ptr(), index_type.as_ptr(), field_type.as_ptr(), index_opts)
         };
         unsafe { ffi::index_opts_destroy(index_opts); };
         ok
@@ -50,7 +43,7 @@ impl CReindexer {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
-        unsafe { ffi::re_client_insert(self.inner, ns.as_ptr(), data.as_ptr()) }
+        unsafe { ffi::re_insert(self.inner, ns.as_ptr(), data.as_ptr()) }
     }
 
     /*
@@ -60,7 +53,7 @@ impl CReindexer {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
-        unsafe { ffi::re_client_upsert(self.inner, ns.as_ptr(), data.as_ptr()) }
+        unsafe { ffi::re_upsert(self.inner, ns.as_ptr(), data.as_ptr()) }
     }
 
     /*
@@ -70,7 +63,7 @@ impl CReindexer {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
-        unsafe { ffi::re_client_update(self.inner, ns.as_ptr(), data.as_ptr()) }
+        unsafe { ffi::re_update(self.inner, ns.as_ptr(), data.as_ptr()) }
     }
 
     /*
@@ -80,24 +73,24 @@ impl CReindexer {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
-        unsafe { ffi::re_client_delete(self.inner, ns.as_ptr(), data.as_ptr()) }
+        unsafe { ffi::re_delete(self.inner, ns.as_ptr(), data.as_ptr()) }
     }
 
     /*
     query: `"SELECT * FROM items"`
     */
-    pub fn select(&mut self, query: &str) -> (CQueryResults, bool) {
+    pub fn select(&mut self, query: &str) -> (QueryResults, bool) {
         let query = CString::new(query).unwrap();
-        let qr = CQueryResults::new();
-        let ok = unsafe { ffi::re_client_select(self.inner, qr.inner, query.as_ptr()) };
+        let qr = QueryResults::new();
+        let ok = unsafe { ffi::re_select(self.inner, qr.inner, query.as_ptr()) };
         (qr, ok)
     }
 }
 
-impl Drop for CReindexer {
+impl Drop for Reindexer {
     fn drop(&mut self) {
         unsafe {
-            ffi::re_client_destroy(self.inner);
+            ffi::re_destroy(self.inner);
         }
     }
 }

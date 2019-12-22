@@ -18,18 +18,28 @@ using std::chrono::seconds;
 using namespace reindexer;
 using namespace std;
 
-class Iterator {
+class CIterator {
 public:
-    Iterator(reindexer::client::QueryResults::Iterator start, reindexer::client::QueryResults::Iterator end) {
-        //this->start = start;
+    CIterator(reindexer::client::QueryResults::Iterator start, reindexer::client::QueryResults::Iterator end) {
         this->end = end;
         this->current = start;
         this->iter = false;
     }
-    //reindexer::client::QueryResults::Iterator start;
     reindexer::client::QueryResults::Iterator current;
     reindexer::client::QueryResults::Iterator end;
-    bool iter;;
+    bool iter;
+};
+
+class Iterator {
+public:
+    Iterator(reindexer::QueryResults::Iterator start, reindexer::QueryResults::Iterator end) {
+        this->end = end;
+        this->current = start;
+        this->iter = false;
+    }
+    reindexer::QueryResults::Iterator current;
+    reindexer::QueryResults::Iterator end;
+    bool iter;
 };
 
 extern "C" {
@@ -202,8 +212,8 @@ bool re_client_connect(reindexer::client::Reindexer *db, const char* dsn) {
     return err.ok();
 }
 
-bool re_client_open_namespace(reindexer::client::Reindexer *db, const char* ns) {
-    Error err = db->OpenNamespace(string(ns), StorageOpts().Enabled(false));
+bool re_client_open_namespace(reindexer::client::Reindexer *db, const char* ns, bool enabledStorage) {
+    Error err = db->OpenNamespace(string(ns), StorageOpts().Enabled(enabledStorage));
     return err.ok();
 }
 
@@ -354,11 +364,11 @@ int re_client_query_results_count(reindexer::client::QueryResults *qr) {
     return qr->Count();
 }
 
-Iterator* re_client_query_results_iter(reindexer::client::QueryResults *qr) {
-    return new Iterator(qr->begin(), qr->end());
+CIterator* re_client_query_results_iter(reindexer::client::QueryResults *qr) {
+    return new CIterator(qr->begin(), qr->end());
 }
 
-bool re_client_query_results_iter_next(Iterator *it) {
+bool re_client_query_results_iter_next(CIterator *it) {
     if (it->iter) {
         if (it->current == it->end) {
             return false;
@@ -373,7 +383,7 @@ bool re_client_query_results_iter_next(Iterator *it) {
     return it->current.Status().ok();
 }
 
-char* re_client_query_results_iter_get_json(Iterator *it) {
+char* re_client_query_results_iter_get_json(CIterator *it) {
     WrSerializer ser;
     auto ok = it->current.GetJSON(ser, false);
     //string json(ser.Slice());
@@ -381,7 +391,181 @@ char* re_client_query_results_iter_get_json(Iterator *it) {
     return a;
 }
 
-void re_client_query_results_iter_destroy(Iterator *it) {
+void re_client_query_results_iter_destroy(CIterator *it) {
+    if (it != nullptr) {
+        delete it;
+        it = nullptr;
+    }
+}
+
+reindexer::Reindexer *re_new() {
+    return new reindexer::Reindexer();
+}
+
+void re_destroy(reindexer::Reindexer *db) {
+    if (db != nullptr) {
+        delete db;
+        db = nullptr;
+    }
+}
+
+bool re_open_namespace(reindexer::Reindexer *db, const char* ns, bool enabledStorage) {
+    Error err = db->OpenNamespace(string(ns), StorageOpts().Enabled(enabledStorage));
+    return err.ok();
+}
+
+// IndexDef(const string &name, const string &indexType, const string &fieldType, const IndexOpts opts);
+bool re_add_index(reindexer::Reindexer *db, const char* ns, const char* name, const char* indexType,
+                         const char* fieldType, IndexOpts *indexOpts) {
+    auto err = db->AddIndex(ns, {name, indexType, fieldType, *indexOpts});
+    return err.ok();
+}
+
+bool re_insert(reindexer::Reindexer *db, const char* ns, const char* data) {
+    reindexer::Item item(db->NewItem(ns));
+    //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
+
+    //Error err = item.FromJSON(R"_({"id":1234, "value" : "value"})_");
+    Error err = item.FromJSON(data);
+    //ASSERT_TRUE(err.ok()) << err.what();
+    if (!err.ok()) {
+        return false;
+    }
+
+    //err = db->WithTimeout(milliseconds(1000)).Insert(ns, item);
+    //err = db->WithTimeout(milliseconds(1000*60*10)).Insert(ns, item);
+    err = db->Insert(ns, item);
+    //ASSERT_TRUE(err.ok()) << err.what();
+    if (!err.ok()) {
+        return false;
+    }
+
+    //err = db->WithTimeout(milliseconds(1000*60*10)).Commit(ns);
+    err = db->Commit(ns);
+    return err.ok();
+}
+
+bool re_update(reindexer::Reindexer *db, const char* ns, const char* data) {
+    reindexer::Item item(db->NewItem(ns));
+    //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
+
+    //Error err = item.FromJSON(R"_({"id":1234, "value" : "value"})_");
+    Error err = item.FromJSON(data);
+    //ASSERT_TRUE(err.ok()) << err.what();
+    if (!err.ok()) {
+        return false;
+    }
+
+    //err = db->WithTimeout(milliseconds(1000)).Insert(ns, item);
+    //err = db->WithTimeout(milliseconds(1000*60*10)).Update(ns, item);
+    err = db->Update(ns, item);
+    //ASSERT_TRUE(err.ok()) << err.what();
+    if (!err.ok()) {
+        return false;
+    }
+
+    //err = db->WithTimeout(milliseconds(1000*60*10)).Commit(ns);
+    err = db->Commit(ns);
+    return err.ok();
+}
+
+bool re_upsert(reindexer::Reindexer *db, const char* ns, const char* data) {
+    reindexer::Item item(db->NewItem(ns));
+    //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
+
+    //Error err = item.FromJSON(R"_({"id":1234, "value" : "value"})_");
+    Error err = item.FromJSON(data);
+    //ASSERT_TRUE(err.ok()) << err.what();
+    if (!err.ok()) {
+        return false;
+    }
+
+    //err = db->WithTimeout(milliseconds(1000)).Insert(ns, item);
+    //err = db->WithTimeout(milliseconds(1000*60*10)).Upsert(ns, item);
+    err = db->Upsert(ns, item);
+    //ASSERT_TRUE(err.ok()) << err.what();
+    if (!err.ok()) {
+        return false;
+    }
+
+    //err = db->WithTimeout(milliseconds(1000*60*10)).Commit(ns);
+    err = db->Commit(ns);
+    return err.ok();
+}
+
+bool re_delete(reindexer::Reindexer *db, const char* ns, const char* data) {
+    reindexer::Item item(db->NewItem(ns));
+    //ASSERT_TRUE(item.Status().ok()) << item.Status().what();
+
+    //Error err = item.FromJSON(R"_({"id":1234, "value" : "value"})_");
+    Error err = item.FromJSON(data);
+    //ASSERT_TRUE(err.ok()) << err.what();
+    if (!err.ok()) {
+        return false;
+    }
+
+    //err = db->WithTimeout(milliseconds(1000)).Insert(ns, item);
+    //err = db->WithTimeout(milliseconds(1000*60*10)).Delete(ns, item);
+    err = db->Delete(ns, item);
+    //ASSERT_TRUE(err.ok()) << err.what();
+    if (!err.ok()) {
+        return false;
+    }
+
+    //err = db->WithTimeout(milliseconds(1000*60*10)).Commit(ns);
+    err = db->Commit(ns);
+    return err.ok();
+}
+
+bool re_select(reindexer::Reindexer *db, reindexer::QueryResults *qr, const char* query) {
+    Error err = db->Select(query, *qr);
+    //cout << err.ok() << " " << err.what() << endl;
+    return err.ok();
+}
+
+reindexer::QueryResults *re_query_results_new() {
+    return new reindexer::QueryResults();
+}
+
+void re_query_results_destroy(reindexer::QueryResults *qr) {
+    if (qr != nullptr) {
+        delete qr;
+        qr = nullptr;
+    }
+}
+
+int re_query_results_count(reindexer::QueryResults *qr) {
+    return qr->Count();
+}
+
+Iterator* re_query_results_iter(reindexer::QueryResults *qr) {
+    return new Iterator(qr->begin(), qr->end());
+}
+
+bool re_query_results_iter_next(Iterator *it) {
+    if (it->iter) {
+        if (it->current == it->end) {
+            return false;
+        }
+        ++(*it->current);
+    } else {
+        it->iter = true;
+    }
+    if (it->current == it->end) {
+        return false;
+    }
+    return it->current.Status().ok();
+}
+
+char* re_query_results_iter_get_json(Iterator *it) {
+    WrSerializer ser;
+    auto ok = it->current.GetJSON(ser, false);
+    //string json(ser.Slice());
+    auto a = strdup(ser.c_str());
+    return a;
+}
+
+void re_query_results_iter_destroy(Iterator *it) {
     if (it != nullptr) {
         delete it;
         it = nullptr;
