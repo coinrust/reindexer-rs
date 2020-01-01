@@ -19,6 +19,18 @@ impl Iter {
     }
 }
 
+impl Iterator for Iter {
+    type Item = String;
+
+    fn next(&mut self) -> Option<String> {
+        if self.next() {
+            Some(self.get_json())
+        } else {
+            None
+        }
+    }
+}
+
 impl Drop for Iter {
     fn drop(&mut self) {
         unsafe {

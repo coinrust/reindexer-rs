@@ -19,6 +19,18 @@ impl CIter {
     }
 }
 
+impl Iterator for CIter {
+    type Item = String;
+
+    fn next(&mut self) -> Option<String> {
+        if self.next() {
+            Some(self.get_json())
+        } else {
+            None
+        }
+    }
+}
+
 impl Drop for CIter {
     fn drop(&mut self) {
         unsafe {

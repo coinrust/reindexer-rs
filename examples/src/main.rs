@@ -25,14 +25,13 @@ fn main() {
     let (mut qr, ok) = db.select("SELECT * FROM items");
     assert_eq!(true, ok);
 
-    let mut it = qr.iter();
-    loop {
-        let ok = it.next();
-        if !ok {
+    let mut n = 0;
+    for s in qr.iter() {
+        println!("item: {}", s);
+        n += 1;
+        if n > 10 {
             break;
         }
-        let json = it.get_json();
-        println!("item: {}", json);
     }
 
     // cproto
@@ -58,14 +57,8 @@ fn main() {
     let (mut qr, ok) = db.select("SELECT * FROM items");
     assert_eq!(true, ok);
 
-    let mut it = qr.iter();
-    loop {
-        let ok = it.next();
-        if !ok {
-            break;
-        }
-        let json = it.get_json();
-        println!("item: {}", json);
+    for s in qr.iter() {
+        println!("item: {}", s);
     }
 
     println!("OK");
