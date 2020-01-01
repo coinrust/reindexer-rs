@@ -92,6 +92,16 @@ impl Reindexer {
         let ok = unsafe { ffi::re_select(self.inner, qr.inner, query.as_ptr()) };
         (qr, ok)
     }
+
+    /*
+    query: `"UPDATE items SET value = 'value1' WHERE id = 1000"`
+    */
+    pub fn update_sql(&mut self, query: &str) -> (QueryResults, bool) {
+        let query = CString::new(query).unwrap();
+        let qr = QueryResults::new();
+        let ok = unsafe { ffi::re_update_sql(self.inner, qr.inner, query.as_ptr()) };
+        (qr, ok)
+    }
 }
 
 impl Drop for Reindexer {

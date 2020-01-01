@@ -33,7 +33,10 @@ let item = r#"{"id":1235, "value" : "value"}"#;
 let ok = db.upsert(ns, item);
 assert_eq!(true, ok);
 
-let (mut qr, ok) = db.select("SELECT * FROM items");
+let (_, ok) = db.update_sql("UPDATE items SET ext = 'hello' WHERE id = 1235");
+assert_eq!(true, ok);
+
+let (mut qr, ok) = db.select("SELECT * FROM items WHERE id = 1235");
 assert_eq!(true, ok);
 
 for s in qr.iter() {

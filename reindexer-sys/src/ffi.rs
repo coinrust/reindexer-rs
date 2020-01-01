@@ -57,6 +57,7 @@ extern "C" {
     pub fn re_upsert(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
     pub fn re_delete(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;
     pub fn re_select(db: *mut Reindexer, qr: *mut QueryResults, query: *const c_char) -> bool;
+    pub fn re_update_sql(db: *mut Reindexer, qr: *mut QueryResults, query: *const c_char) -> bool;
 
     pub fn re_query_results_new() -> *mut QueryResults;
     pub fn re_query_results_destroy(qr: *mut QueryResults) -> ();

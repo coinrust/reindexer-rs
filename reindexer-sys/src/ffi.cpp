@@ -537,6 +537,18 @@ bool re_select(reindexer::Reindexer *db, reindexer::QueryResults *qr, const char
     return err.ok();
 }
 
+bool re_update_sql(reindexer::Reindexer *db, reindexer::QueryResults *qr, const char* query) {
+    Query q;
+	try {
+		q.FromSQL(query);
+    } catch (const Error& err) {
+		return false;
+	}
+    Error err = db->Update(q, *qr);
+    //cout << err.ok() << " " << err.what() << endl;
+    return err.ok();
+}
+
 reindexer::QueryResults *re_query_results_new() {
     return new reindexer::QueryResults();
 }
