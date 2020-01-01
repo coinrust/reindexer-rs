@@ -5,8 +5,10 @@ fn main() {
     // builtin
     let mut db = Reindexer::new();
 
+    db.connet("builtin:///tmp/reindex/testdb");
+
     let ns = "items";
-    let ok = db.open_namespace(ns, true);
+    let ok = db.open_namespace(ns);
     assert_eq!(true, ok);
 
     let ok = db.add_index(ns, "id", "hash", "int", true);

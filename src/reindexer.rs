@@ -13,10 +13,17 @@ impl Reindexer {
         }
     }
 
-    pub fn open_namespace(&mut self, ns: &str, storage_enabled: bool) -> bool {
+    pub fn connet(&mut self, dsn: &str) {
+        let dsn = CString::new(dsn).unwrap();
+        unsafe {
+            ffi::re_connect(self.inner, dsn.as_ptr())
+        }
+    }
+
+    pub fn open_namespace(&mut self, ns: &str) -> bool {
         let ns = CString::new(ns).unwrap();
         unsafe {
-            ffi::re_open_namespace(self.inner, ns.as_ptr(), storage_enabled)
+            ffi::re_open_namespace(self.inner, ns.as_ptr())
         }
     }
 

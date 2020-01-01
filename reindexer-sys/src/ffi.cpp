@@ -4,6 +4,7 @@
 #include <vector>
 #include <deque>
 #include "core/reindexer.h"
+#include "core/type_consts.h"
 #include "core/item.h"
 #include "client/reindexer.h"
 #include "client/queryresults.h"
@@ -42,6 +43,8 @@ public:
     bool iter;
 };
 
+const std::string kStoragePath = "/tmp/reindex/ft_bench_test";
+
 extern "C" {
 
 void re_test() {
@@ -49,6 +52,8 @@ void re_test() {
     const string default_namespace = "test_namespace";
 
     auto db = std::shared_ptr<Reindexer> (new Reindexer);
+    
+    db->Connect("builtin://" + kStoragePath);
 
     Error err = db->OpenNamespace(default_namespace, StorageOpts().Enabled(false));
     //ASSERT_TRUE(err.ok()) << err.what();
@@ -409,8 +414,17 @@ void re_destroy(reindexer::Reindexer *db) {
     }
 }
 
-bool re_open_namespace(reindexer::Reindexer *db, const char* ns, bool enabledStorage) {
-    Error err = db->OpenNamespace(string(ns), StorageOpts().Enabled(enabledStorage));
+void re_connect(reindexer::Reindexer *db, const char* dsn) {
+    bool allowDBErrors = true;
+    StorageTypeOpt storageType = kStorageTypeOptLevelDB;
+    bool withAutorepair = true;
+    ConnectOpts opts = ConnectOpts().AllowNamespaceErrors(allowDBErrors).WithStorageType(storageType).Autorepair(withAutorepair);
+    db->Connect(dsn, opts);
+}
+
+bool re_open_namespace(reindexer::Reindexer *db, const char* ns) {
+    //Error err = db->OpenNamespace(string(ns), StorageOpts().Enabled(enabledStorage));
+    Error err = db->OpenNamespace(string(ns));
     return err.ok();
 }
 
