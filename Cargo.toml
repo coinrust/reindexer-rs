@@ -5,6 +5,8 @@ authors = ["Frank Zhou <529808348@qq.com>"]
 edition = "2018"
 repository = "https://github.com/coinrust-labs/reindexer-rs"
 readme = "README.md"
+description = "Reindexer library for Rust."
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
