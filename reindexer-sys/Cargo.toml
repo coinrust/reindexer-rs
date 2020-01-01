@@ -3,7 +3,12 @@ name = "reindexer-sys"
 version = "0.1.0"
 authors = ["Frank Zhou <529808348@qq.com>"]
 edition = "2018"
-# build = "build.rs"
+description = "The Rust FFI bindings of Apache BRPC"
+keywords = ["reindexer","rust"]
+repository = "https://github.com/coinrust/reindexer-rs"
+readme = "README.md"
+description = "The Rust FFI bindings of Reindexer"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
