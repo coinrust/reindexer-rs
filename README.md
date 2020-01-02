@@ -1,6 +1,23 @@
 # reindexer-rs
 Reindexer library for Rust
 
+# Installation (refer to [installation](https://github.com/Restream/reindexer/blob/master/cpp_src/readme.md#installation))
+```
+go get github.com/Restream/reindexer
+sudo apt-get install libgoogle-perftools-dev
+cd $GOPATH/src/github.com/Restream/reindexer
+sudo ./dependencies.sh
+mkdir -p build && cd build
+cmake ..
+make -j4
+# optional: step for build swagger documentation
+make swagger
+# optional: step for build web pages of Reindexer's face
+make face
+# install to system
+sudo make install
+```
+
 # Build
 ```
 $ cargo build
