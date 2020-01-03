@@ -12,11 +12,11 @@ impl CQueryResults {
         }
     }
 
-    pub fn count(&mut self) -> i32 {
+    pub fn count(&self) -> i32 {
         unsafe { ffi::re_client_query_results_count(self.inner) }
     }
 
-    pub fn iter(&mut self) -> CIter {
+    pub fn iter(&self) -> CIter {
         let inner = unsafe { ffi::re_client_query_results_iter(self.inner) };
         CIter { inner }
     }

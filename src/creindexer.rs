@@ -13,21 +13,21 @@ impl CReindexer {
         }
     }
 
-    pub fn connect(&mut self, dsn: &str) -> bool {
+    pub fn connect(&self, dsn: &str) -> bool {
         let dsn = CString::new(dsn).unwrap();
         unsafe {
             ffi::re_client_connect(self.inner, dsn.as_ptr())
         }
     }
 
-    pub fn open_namespace(&mut self, ns: &str, storage_enabled: bool) -> bool {
+    pub fn open_namespace(&self, ns: &str, storage_enabled: bool) -> bool {
         let ns = CString::new(ns).unwrap();
         unsafe {
             ffi::re_client_open_namespace(self.inner, ns.as_ptr(), storage_enabled)
         }
     }
 
-    pub fn add_index(&mut self, ns: &str, name: &str, index_type: &str, field_type: &str, pk: bool) -> bool {
+    pub fn add_index(&self, ns: &str, name: &str, index_type: &str, field_type: &str, pk: bool) -> bool {
         let ns = CString::new(ns).unwrap();
         let name = CString::new(name).unwrap();
         let index_type = CString::new(index_type).unwrap();
@@ -46,7 +46,7 @@ impl CReindexer {
     /*
     data: `{"id":1,"name":"test"}`
     */
-    pub fn insert(&mut self, ns: &str, data: &str) -> bool {
+    pub fn insert(&self, ns: &str, data: &str) -> bool {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
@@ -56,7 +56,7 @@ impl CReindexer {
     /*
     data: `{"id":1,"name":"test"}`
     */
-    pub fn upsert(&mut self, ns: &str, data: &str) -> bool {
+    pub fn upsert(&self, ns: &str, data: &str) -> bool {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
@@ -66,7 +66,7 @@ impl CReindexer {
     /*
     data: `{"id":1,"name":"test"}`
     */
-    pub fn update(&mut self, ns: &str, data: &str) -> bool {
+    pub fn update(&self, ns: &str, data: &str) -> bool {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
@@ -76,7 +76,7 @@ impl CReindexer {
     /*
     data: `{"id":1}`
     */
-    pub fn delete(&mut self, ns: &str, data: &str) -> bool {
+    pub fn delete(&self, ns: &str, data: &str) -> bool {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
@@ -86,7 +86,7 @@ impl CReindexer {
     /*
     query: `"SELECT * FROM items"`
     */
-    pub fn select(&mut self, query: &str) -> (CQueryResults, bool) {
+    pub fn select(&self, query: &str) -> (CQueryResults, bool) {
         let query = CString::new(query).unwrap();
         let qr = CQueryResults::new();
         let ok = unsafe { ffi::re_client_select(self.inner, qr.inner, query.as_ptr()) };

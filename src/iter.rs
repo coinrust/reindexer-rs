@@ -10,7 +10,7 @@ impl Iter {
         unsafe { ffi::re_query_results_iter_next(self.inner) }
     }
 
-    pub fn get_json(&mut self) -> String {
+    pub fn get_json(&self) -> String {
         unsafe {
             let str_buff = ffi::re_query_results_iter_get_json(self.inner);
             let cstr = CStr::from_ptr(str_buff);

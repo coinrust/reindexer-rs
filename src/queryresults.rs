@@ -12,11 +12,11 @@ impl QueryResults {
         }
     }
 
-    pub fn count(&mut self) -> i32 {
+    pub fn count(&self) -> i32 {
         unsafe { ffi::re_query_results_count(self.inner) }
     }
 
-    pub fn iter(&mut self) -> Iter {
+    pub fn iter(&self) -> Iter {
         let inner = unsafe { ffi::re_query_results_iter(self.inner) };
         Iter { inner }
     }

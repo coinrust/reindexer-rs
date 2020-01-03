@@ -7,7 +7,6 @@ pub mod creindexer;
 
 #[cfg(test)]
 mod tests {
-    use crate::ffi::hmbdc_test;
     use reindexer_sys::ffi;
     use reindexer_rs::creindexer::*;
     use std::ffi::CString;

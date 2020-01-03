@@ -13,21 +13,21 @@ impl Reindexer {
         }
     }
 
-    pub fn connet(&mut self, dsn: &str) {
+    pub fn connet(&self, dsn: &str) {
         let dsn = CString::new(dsn).unwrap();
         unsafe {
             ffi::re_connect(self.inner, dsn.as_ptr())
         }
     }
 
-    pub fn open_namespace(&mut self, ns: &str) -> bool {
+    pub fn open_namespace(&self, ns: &str) -> bool {
         let ns = CString::new(ns).unwrap();
         unsafe {
             ffi::re_open_namespace(self.inner, ns.as_ptr())
         }
     }
 
-    pub fn add_index(&mut self, ns: &str, name: &str, index_type: &str, field_type: &str, pk: bool) -> bool {
+    pub fn add_index(&self, ns: &str, name: &str, index_type: &str, field_type: &str, pk: bool) -> bool {
         let ns = CString::new(ns).unwrap();
         let name = CString::new(name).unwrap();
         let index_type = CString::new(index_type).unwrap();
@@ -46,7 +46,7 @@ impl Reindexer {
     /*
     data: `{"id":1,"name":"test"}`
     */
-    pub fn insert(&mut self, ns: &str, data: &str) -> bool {
+    pub fn insert(&self, ns: &str, data: &str) -> bool {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
@@ -56,7 +56,7 @@ impl Reindexer {
     /*
     data: `{"id":1,"name":"test"}`
     */
-    pub fn upsert(&mut self, ns: &str, data: &str) -> bool {
+    pub fn upsert(&self, ns: &str, data: &str) -> bool {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
@@ -66,7 +66,7 @@ impl Reindexer {
     /*
     data: `{"id":1,"name":"test"}`
     */
-    pub fn update(&mut self, ns: &str, data: &str) -> bool {
+    pub fn update(&self, ns: &str, data: &str) -> bool {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
@@ -76,7 +76,7 @@ impl Reindexer {
     /*
     data: `{"id":1}`
     */
-    pub fn delete(&mut self, ns: &str, data: &str) -> bool {
+    pub fn delete(&self, ns: &str, data: &str) -> bool {
         // r#"{"id":1234, "value" : "value"}"#
         let ns = CString::new(ns).unwrap();
         let data = CString::new(data).unwrap();
@@ -86,7 +86,7 @@ impl Reindexer {
     /*
     query: `"SELECT * FROM items"`
     */
-    pub fn select(&mut self, query: &str) -> (QueryResults, bool) {
+    pub fn select(&self, query: &str) -> (QueryResults, bool) {
         let query = CString::new(query).unwrap();
         let qr = QueryResults::new();
         let ok = unsafe { ffi::re_select(self.inner, qr.inner, query.as_ptr()) };
@@ -96,7 +96,7 @@ impl Reindexer {
     /*
     query: `"UPDATE items SET value = 'value1' WHERE id = 1000"`
     */
-    pub fn update_sql(&mut self, query: &str) -> (QueryResults, bool) {
+    pub fn update_sql(&self, query: &str) -> (QueryResults, bool) {
         let query = CString::new(query).unwrap();
         let qr = QueryResults::new();
         let ok = unsafe { ffi::re_update_sql(self.inner, qr.inner, query.as_ptr()) };
