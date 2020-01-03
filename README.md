@@ -28,10 +28,10 @@ $ cargo build
 $ cargo run -p reindexer-examples
 ```
 
-# Example 1
+# Example (builtin)
 ```rust,editable
 // builtin
-let mut db = Reindexer::new();
+let db = Reindexer::new();
 
 db.connet("builtin:///tmp/reindex/testdb");
 
@@ -53,7 +53,7 @@ assert_eq!(true, ok);
 let (_, ok) = db.update_sql("UPDATE items SET ext = 'hello' WHERE id = 1235");
 assert_eq!(true, ok);
 
-let (mut qr, ok) = db.select("SELECT * FROM items WHERE id = 1235");
+let (qr, ok) = db.select("SELECT * FROM items WHERE id = 1235");
 assert_eq!(true, ok);
 
 for s in qr.iter() {
@@ -61,10 +61,10 @@ for s in qr.iter() {
 }
 ```
 
-# Example 2
+# Example (cproto)
 ```rust,editable
 // cproto
-let mut db = CReindexer::new();
+let db = CReindexer::new();
 let ok = db.connect("cproto://127.0.0.1:6534/test_db");
 assert_eq!(true, ok);
 
@@ -83,7 +83,7 @@ let item = r#"{"id":1235, "value" : "value"}"#;
 let ok = db.upsert(ns, item);
 assert_eq!(true, ok);
 
-let (mut qr, ok) = db.select("SELECT * FROM items");
+let (qr, ok) = db.select("SELECT * FROM items");
 assert_eq!(true, ok);
 
 for s in qr.iter() {
