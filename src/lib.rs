@@ -1,16 +1,15 @@
-pub mod iter;
-pub mod queryresults;
-pub mod reindexer;
 pub mod citer;
 pub mod cqueryresults;
 pub mod creindexer;
+pub mod iter;
+pub mod queryresults;
+pub mod reindexer;
 
 #[cfg(test)]
 mod tests {
     use reindexer_sys::ffi;
-    use reindexer_rs::creindexer::*;
-    use std::ffi::CString;
     use std::ffi::CStr;
+    use std::ffi::CString;
 
     #[test]
     fn re_client_test() {
@@ -30,7 +29,14 @@ mod tests {
             let field_type = CString::new("int").unwrap();
             let index_opts = ffi::index_opts_new();
             ffi::index_opts_pk(index_opts);
-            let ok = ffi::re_client_add_index(db, ns.as_ptr(), name.as_ptr(), index_type.as_ptr(), field_type.as_ptr(), index_opts);
+            let ok = ffi::re_client_add_index(
+                db,
+                ns.as_ptr(),
+                name.as_ptr(),
+                index_type.as_ptr(),
+                field_type.as_ptr(),
+                index_opts,
+            );
             println!("re_client_add_index: {}", ok);
             ffi::index_opts_destroy(index_opts);
 
@@ -82,7 +88,7 @@ mod tests {
             let db = ffi::re_new();
 
             let ns = CString::new("items").unwrap();
-            let ok = ffi::re_open_namespace(db, ns.as_ptr(), true);
+            let ok = ffi::re_open_namespace(db, ns.as_ptr());
             println!("re_open_namespace: {}", ok);
 
             let name = CString::new("id").unwrap();
@@ -90,7 +96,14 @@ mod tests {
             let field_type = CString::new("int").unwrap();
             let index_opts = ffi::index_opts_new();
             ffi::index_opts_pk(index_opts);
-            let ok = ffi::re_add_index(db, ns.as_ptr(), name.as_ptr(), index_type.as_ptr(), field_type.as_ptr(), index_opts);
+            let ok = ffi::re_add_index(
+                db,
+                ns.as_ptr(),
+                name.as_ptr(),
+                index_type.as_ptr(),
+                field_type.as_ptr(),
+                index_opts,
+            );
             println!("re_add_index: {}", ok);
             ffi::index_opts_destroy(index_opts);
 

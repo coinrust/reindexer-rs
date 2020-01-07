@@ -1,5 +1,5 @@
-use reindexer_sys::ffi::{self};
 use crate::iter::Iter;
+use reindexer_sys::ffi::{self};
 
 pub struct QueryResults {
     pub inner: *mut ffi::QueryResults,

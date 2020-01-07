@@ -1,5 +1,5 @@
-use reindexer_sys::ffi::{self};
 use crate::citer::CIter;
+use reindexer_sys::ffi::{self};
 
 pub struct CQueryResults {
     pub inner: *mut ffi::CQueryResults,

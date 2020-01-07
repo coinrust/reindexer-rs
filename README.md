@@ -20,12 +20,11 @@ sudo make install
 
 # Build
 ```
+# Build
 $ cargo build
-```
 
-# Run
-```
-$ cargo run -p reindexer-examples
+# Build examples
+$ cargo build -p reindexer-examples
 ```
 
 # Example (builtin)
