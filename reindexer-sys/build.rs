@@ -6,9 +6,18 @@ use std::path::Path;
 fn main() {
     let go_path = env::var("GOPATH").unwrap();
 
-    let reindexer_path = Path::new( &go_path ).join("src/github.com/restream/reindexer/cpp_src").display().to_string();
-    let reindexer_build_path = Path::new( &go_path ).join("src/github.com/restream/reindexer/build/cpp_src").display().to_string();
-    let reindexer_vendor_path = Path::new( &go_path ).join("src/github.com/restream/reindexer/cpp_src/vendor").display().to_string();
+    let reindexer_path = Path::new(&go_path)
+        .join("src/github.com/restream/reindexer/cpp_src")
+        .display()
+        .to_string();
+    let reindexer_build_path = Path::new(&go_path)
+        .join("src/github.com/restream/reindexer/build/cpp_src")
+        .display()
+        .to_string();
+    let reindexer_vendor_path = Path::new(&go_path)
+        .join("src/github.com/restream/reindexer/cpp_src/vendor")
+        .display()
+        .to_string();
 
     cc::Build::new()
         .cpp(true)
