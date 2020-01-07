@@ -3,9 +3,9 @@ Reindexer library for Rust
 
 # Installation (refer to [installation](https://github.com/Restream/reindexer/blob/master/cpp_src/readme.md#installation))
 ```
-go get github.com/Restream/reindexer
+go get github.com/restream/reindexer
 sudo apt-get install libgoogle-perftools-dev
-cd $GOPATH/src/github.com/Restream/reindexer
+cd $GOPATH/src/github.com/restream/reindexer
 sudo ./dependencies.sh
 mkdir -p build && cd build
 cmake ..
