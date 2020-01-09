@@ -4,6 +4,7 @@
 #include "core/reindexer.h"
 #include "core/type_consts.h"
 #include "tools/errors.h"
+#include "estl/string_view.h"
 #include <deque>
 #include <fstream>
 #include <iostream>
@@ -90,7 +91,7 @@ void re_test() {
   // ASSERT_NO_THROW(ASSERT_EQ(selItem["id"].As<int>(), 1234));
   // ASSERT_NO_THROW(ASSERT_EQ(selItem["value"].As<string>(), "value"));
   cout << "id: " << selItem["id"].As<int>() << endl;
-  string_view a = selItem.GetJSON();
+  reindexer::string_view a = selItem.GetJSON();
   cout << "item json: " << a << endl;
 
   qr.Clear();
@@ -166,7 +167,7 @@ void re_client_test() {
 
   // auto query = "a";
   Query query1 = Query(default_namespace).Where("id", CondEq, "1234");
-  string_view query2 = "SELECT * FROM test_namespace";
+  reindexer::string_view query2 = "SELECT * FROM test_namespace";
 
   reindexer::client::QueryResults qr;
   // err = db->WithTimeout(milliseconds(1000)).Select(query2, qr);
