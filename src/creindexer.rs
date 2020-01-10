@@ -6,6 +6,9 @@ pub struct CReindexer {
     inner: *mut ffi::CReindexer,
 }
 
+unsafe impl Send for CReindexer {}
+unsafe impl Sync for CReindexer {}
+
 impl CReindexer {
     pub fn new() -> Self {
         CReindexer {

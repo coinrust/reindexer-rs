@@ -11,6 +11,12 @@ pub enum Reindexer {} // reindexer::Reindexer
 pub enum QueryResults {} // reindexer::QueryResults
 pub enum QueryResultsIterator {} // reindexer::QueryResults::Iterator
 
+unsafe impl Send for CReindexer {}
+unsafe impl Sync for CReindexer {}
+
+unsafe impl Send for Reindexer {}
+unsafe impl Sync for Reindexer {}
+
 #[allow(dead_code)]
 extern "C" {
     pub fn re_test() -> ();
