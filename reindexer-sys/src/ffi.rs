@@ -71,9 +71,16 @@ extern "C" {
         db: *mut Reindexer,
         ns: *const c_char,
         name: *const c_char,
+        json_paths: *const c_char,
         indexType: *const c_char,
         fieldType: *const c_char,
         indexOpts: *mut IndexOpts,
+    ) -> bool;
+
+    pub fn re_add_index_from_json(
+        db: *mut Reindexer,
+        ns: *const c_char,
+        index_def_json: *const c_char,
     ) -> bool;
 
     pub fn re_insert(db: *mut Reindexer, ns: *const c_char, data: *const c_char) -> bool;

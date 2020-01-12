@@ -9,24 +9,30 @@ fn main() {
 
     let ns = "items";
     let ok = db.open_namespace(ns);
-    assert_eq!(true, ok);
+    assert!(ok);
 
-    let ok = db.add_index(ns, "id", "hash", "int", true);
-    assert_eq!(true, ok);
+    let ok = db.add_index(ns, "id", "", "hash", "int", false);
+    assert!(ok);
+
+    let ok = db.add_index(ns, "fk_id", "", "hash", "int", false);
+    assert!(ok);
+
+    let ok = db.add_index(ns, "id+fk_id", "id,fk_id", "tree", "composite", true);
+    assert!(ok);
 
     let item = r#"{"id":1234, "value" : "value"}"#;
     let ok = db.upsert(ns, item);
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let item = r#"{"id":1235, "value" : "value"}"#;
     let ok = db.upsert(ns, item);
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let (_, ok) = db.update_sql("UPDATE items SET ext = 'hello' WHERE id = 1235");
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let (qr, ok) = db.select("SELECT * FROM items WHERE id = 1235");
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let mut n = 0;
     for s in qr.iter() {
@@ -40,31 +46,29 @@ fn main() {
     // cproto
     let db = CReindexer::new();
     let ok = db.connect("cproto://127.0.0.1:6534/test_db");
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let ns = "items";
     let ok = db.open_namespace(ns, true);
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let ok = db.add_index(ns, "id", "hash", "int", true);
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let item = r#"{"id":1234, "value" : "value"}"#;
     let ok = db.upsert(ns, item);
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let item = r#"{"id":1235, "value" : "value"}"#;
     let ok = db.upsert(ns, item);
-    assert_eq!(true, ok);
+    assert!(ok);
 
     let (qr, ok) = db.select("SELECT * FROM items");
-    assert_eq!(true, ok);
+    assert!(ok);
 
     for s in qr.iter() {
         println!("item: {}", s);
     }
-
-    println!("OK");
 }
 
 //fn test_unsafe() {
