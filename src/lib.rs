@@ -83,6 +83,11 @@ mod tests {
     }
 
     #[test]
+    fn re_raw_test() {
+        unsafe { ffi::re_test() };
+    }
+
+    #[test]
     fn re_test() {
         unsafe {
             let db = ffi::re_new();
@@ -92,6 +97,7 @@ mod tests {
             println!("re_open_namespace: {}", ok);
 
             let name = CString::new("id").unwrap();
+            let json_paths = CString::new("").unwrap();
             let index_type = CString::new("hash").unwrap();
             let field_type = CString::new("int").unwrap();
             let index_opts = ffi::index_opts_new();
@@ -100,6 +106,7 @@ mod tests {
                 db,
                 ns.as_ptr(),
                 name.as_ptr(),
+                json_paths.as_ptr(),
                 index_type.as_ptr(),
                 field_type.as_ptr(),
                 index_opts,

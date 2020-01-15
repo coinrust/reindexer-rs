@@ -26,16 +26,25 @@ impl Reindexer {
         unsafe { ffi::re_open_namespace(self.inner, ns.as_ptr()) }
     }
 
+    /// add_index
+    /// ns
+    /// name
+    /// json_paths: `` or `id,fk_id` for composite fields
+    /// index_type: hash, tree, text, fuzzytext, -
+    /// field_type: int, int64, string, composite, double, bool
+    /// pk
     pub fn add_index(
         &self,
         ns: &str,
         name: &str,
+        json_paths: &str,
         index_type: &str,
         field_type: &str,
         pk: bool,
     ) -> bool {
         let ns = CString::new(ns).unwrap();
         let name = CString::new(name).unwrap();
+        let json_paths = CString::new(json_paths).unwrap();
         let index_type = CString::new(index_type).unwrap();
         let field_type = CString::new(field_type).unwrap();
         let index_opts = unsafe { ffi::index_opts_new() };
@@ -49,6 +58,7 @@ impl Reindexer {
                 self.inner,
                 ns.as_ptr(),
                 name.as_ptr(),
+                json_paths.as_ptr(),
                 index_type.as_ptr(),
                 field_type.as_ptr(),
                 index_opts,
@@ -57,6 +67,18 @@ impl Reindexer {
         unsafe {
             ffi::index_opts_destroy(index_opts);
         };
+        ok
+    }
+
+    /// add_index_from_json
+    /// ns
+    /// index_def_json:
+    /// {"name":"id","field_type":"int","index_type":"hash","is_pk":false,"is_array":false,"is_dense":false,"is_sparse":false,"collate_mode":"none","sort_order_letters":"","expire_after":0,"config":{},"json_paths":["id"]}
+    /// {"name":"id+uid","field_type":"composite","index_type":"tree","is_pk":true,"is_array":false,"is_dense":false,"is_sparse":false,"collate_mode":"none","sort_order_letters":"","expire_after":0,"config":{},"json_paths":["id","uid"]}
+    pub fn add_index_from_json(&self, ns: &str, index_def_json: &str) -> bool {
+        let ns = CString::new(ns).unwrap();
+        let index_def_json = CString::new(index_def_json).unwrap();
+        let ok = unsafe { ffi::re_add_index_from_json(self.inner, ns.as_ptr(), index_def_json.as_ptr()) };
         ok
     }
 

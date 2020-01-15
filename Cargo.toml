@@ -1,8 +1,10 @@
 [package]
 name = "reindexer-rs"
-version = "0.1.1"
+version = "0.2.1"
 authors = ["Frank Zhou <529808348@qq.com>"]
 edition = "2018"
+keywords = ["reindexer", "persistent", "database", "embedded"]
+categories = ["database-implementations", "caching"]
 repository = "https://github.com/coinrust/reindexer-rs"
 readme = "README.md"
 description = "Reindexer library for Rust"
@@ -11,7 +13,7 @@ license = "MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-reindexer-sys = { path = "reindexer-sys", version = "0.1" }
+reindexer-sys = { path = "reindexer-sys", version = "0.2" }
 
 [workspace]
 members = ["reindexer-sys", "examples"]
