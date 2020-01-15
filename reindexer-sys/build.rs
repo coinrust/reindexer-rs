@@ -36,6 +36,8 @@ fn main() {
     println!("cargo:rustc-link-lib=dylib=leveldb");
     println!("cargo:rustc-link-lib=static=reindexer");
 
-    println!("cargo:rerun-if-changed=src/*");
+    println!("cargo:rerun-if-changed=src/ffi.cpp");
+    println!("cargo:rerun-if-changed=src/ffi.rs");
+    println!("cargo:rerun-if-changed=src/lib.rs");
     println!("cargo:rerun-if-changed=build.rs");
 }
