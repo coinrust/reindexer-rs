@@ -1,6 +1,6 @@
 [package]
 name = "reindexer-rs"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Frank Zhou <529808348@qq.com>"]
 edition = "2018"
 keywords = ["reindexer", "persistent", "database", "embedded"]
@@ -16,4 +16,8 @@ license = "MIT"
 reindexer-sys = { path = "reindexer-sys", version = "0.2" }
 
 [workspace]
-members = ["reindexer-sys", "examples"]
+members = ["reindexer-sys"]
+
+[[example]]
+name = "hello"
+path = "examples/hello.rs"

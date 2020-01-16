@@ -24,7 +24,10 @@ sudo make install
 $ cargo build
 
 # Build examples
-$ cargo build -p reindexer-examples
+$ cargo build --examples
+
+# Run hello.rs
+$ cargo run --example hello
 ```
 
 # Example (builtin)
